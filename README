@@ -1,0 +1,14 @@
+A single-header math library for graphics and games in C.
+
+Originally a bad joke about the C preprocessor,
+alg.h is unfortunately something I now use on a daily basis.
+It prefers quaternions to matrices, lexical economy to verbosity,
+and specificity to abstraction.
+
+Overall, the two main design goals of alg.h are
+(1) to make writing math in jam scenarios as fast as possible
+and (2) to ensure its source code is maximally unreadable.
+
+Note: this repo was ported over from
+https://github.com/acgaudette/txtquad
+(where it previously lived) on 05.07.21.
