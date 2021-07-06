@@ -5,11 +5,11 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <stdint.h>
 #include "nmmintrin.h"
 #ifdef ALG_DEBUG
 #include <assert.h>
 #endif
-#include "types.h"
 
 #define VEC(N, ...) typedef union v ## N { \
         float s[N];                        \
@@ -60,6 +60,8 @@ MAT(4, VEC_4);
 #undef COMP_4
 #undef  VEC_4
 
+typedef uint8_t idx_t;
+
 /* Floating point functions */
 
 static inline float minf(const float a, const float b)
@@ -104,7 +106,7 @@ static float mixf_safe(const ff range, const float t)
 
 static inline float signf(const float s)
 {
-	u32 u = *((u32*)&s);
+	uint32_t u = *((uint32_t*)&s);
 	return (float)(u >> 31) * -2.f + 1.f;
 }
 
@@ -123,11 +125,11 @@ static inline int is01f(const float s)
 #define V3_FILL(S) ((v3) { S, S, S })
 #define V4_FILL(S) ((v4) { S, S, S, S })
 
-#define shift(N, ID) static v ## N ID(v ## N v, const u8 i) \
+#define shift(N, ID) static v ## N ID(v ## N v, const idx_t i) \
 { \
 	v ## N swap = v; \
-	for (u8 j = 0; j < N; ++j) { \
-		u8 k = (i + j) % N; \
+	for (idx_t j = 0; j < N; ++j) { \
+		idx_t k = (i + j) % N; \
 		v.s[j] = swap.s[k]; \
 	} \
 	return v; \
@@ -171,7 +173,7 @@ GEN(4, shift, ffff)
 #define EQ(N) static int v ## N ## _eq(v ## N a, v ## N b) \
 { \
 	int result = 1; \
-	for (u8 i = 0; i < N; ++i) \
+	for (idx_t i = 0; i < N; ++i) \
 		result &= a.s[i] == b.s[i]; \
 	return result; \
 }
@@ -184,7 +186,7 @@ EQ(4)
 #define FZ_EQ(N) static int v ## N ## _fzeq(v ## N a, v ## N b) \
 { \
 	int result = 1; \
-	for (u8 i = 0; i < N; ++i) \
+	for (idx_t i = 0; i < N; ++i) \
 		result &= fabsf(a.s[i] - b.s[i]) < __FLT_EPSILON__; \
 	return result; \
 }
@@ -515,7 +517,7 @@ FILL(4, 3)
 #define TRACE(N) static float m ## N ## _trace(m ## N m) \
 { \
 	float result = 0.f; \
-	for (u8 i = 0; i < N; ++i) \
+	for (idx_t i = 0; i < N; ++i) \
 		result += m.s[i + N * i]; \
 	return result; \
 }
