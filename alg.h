@@ -183,19 +183,6 @@ EQ(3)
 EQ(4)
 #undef EQ
 
-#define FZ_EQ(N) static int v ## N ## _fzeq(v ## N a, v ## N b) \
-{ \
-	int result = 1; \
-	for (idx_t i = 0; i < N; ++i) \
-		result &= fabsf(a.s[i] - b.s[i]) < __FLT_EPSILON__; \
-	return result; \
-}
-
-FZ_EQ(2)
-FZ_EQ(3)
-FZ_EQ(4)
-#undef FZ_EQ
-
 #define neg(N, ID) static v ## N ID(v ## N v) \
 { \
 	for (size_t i = 0; i < N; ++i) \
