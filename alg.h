@@ -66,8 +66,6 @@ MAT(4, VEC_4);
 #undef COMP_4
 #undef  VEC_4
 
-typedef uint8_t idx_t;
-
 /* Floating point functions */
 
 static inline float minf(const float a, const float b)
@@ -131,11 +129,11 @@ static inline int is01f(const float s)
 #define V3_FILL(S) ((v3) { S, S, S })
 #define V4_FILL(S) ((v4) { S, S, S, S })
 
-#define shift(N, ID) static v ## N ID(v ## N v, const idx_t i) \
+#define shift(N, ID) static v ## N ID(v ## N v, const size_t i) \
 { \
 	v ## N swap = v; \
-	for (idx_t j = 0; j < N; ++j) { \
-		idx_t k = (i + j) % N; \
+	for (size_t j = 0; j < N; ++j) { \
+		size_t k = (i + j) % N; \
 		v.s[j] = swap.s[k]; \
 	} \
 	return v; \
@@ -179,7 +177,7 @@ GEN(4, shift, ffff)
 #define EQ(N) static int v ## N ## _eq(v ## N a, v ## N b) \
 { \
 	int result = 1; \
-	for (idx_t i = 0; i < N; ++i) \
+	for (size_t i = 0; i < N; ++i) \
 		result &= a.s[i] == b.s[i]; \
 	return result; \
 }
@@ -271,7 +269,7 @@ GEN(4, schur, ffff)
 
 #define magsq(N, ID) static float ID(v ## N v) \
 { \
-	float s = 0; \
+	float s = 0.f; \
 	for (size_t i = 0; i < N; ++i) \
 		s += v.s[i] * v.s[i]; \
 	return s; \
@@ -329,12 +327,12 @@ GEN(3, isnorm, fff)
 GEN(4, isnorm, ffff)
 #undef isnorm
 
-#define dot(N, ID) static float ID(v ## N a, v ## N b)         \
-{                                                              \
-        float s = 0;                                           \
-        for (size_t i = 0; i < N; ++i)                         \
-                s += a.s[i] * b.s[i];                          \
-        return s;                                              \
+#define dot(N, ID) static float ID(v ## N a, v ## N b) \
+{                                                      \
+        float s = 0.f;                                 \
+        for (size_t i = 0; i < N; ++i)                 \
+                s += a.s[i] * b.s[i];                  \
+        return s;                                      \
 }
 
 GEN(2, dot, ff)
@@ -519,7 +517,7 @@ FILL(4, 3)
 #define TRACE(N) static float m ## N ## _trace(m ## N m) \
 { \
 	float result = 0.f; \
-	for (idx_t i = 0; i < N; ++i) \
+	for (size_t i = 0; i < N; ++i) \
 		result += m.s[i + N * i]; \
 	return result; \
 }
