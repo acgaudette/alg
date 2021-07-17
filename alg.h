@@ -17,8 +17,8 @@
 #endif
 
 #define VEC(N, ...) typedef union v ## N { \
-        float s[N];                        \
         __VA_ARGS__;                       \
+         float s[N];                       \
 } v ## N
 
 #define COMP_2 float x; \
@@ -27,15 +27,16 @@
 #define COMP_4 COMP_3 float w;
 
 VEC(2, struct { COMP_2 });
-VEC(3, struct { COMP_3 };
-       struct { v2 xy; float _0; };
-       struct { float _1; v2 yz; });
-VEC(4, struct { COMP_4 };
-       struct { v2 xy; v2 zw; };
-       struct { float _0; v2 yz; float _1; };
-       struct { v3 xyz; float _2; };
-       struct { float _3; float yzw; };
+VEC(3, struct { float _0; v2 yz; };
+       struct { v2 xy; float _2; };
+       struct { COMP_3 });
+VEC(4, struct { v2 xy; v2 zw; };
+       struct { float _0; v2 yz; float _3; };
+       struct {    v3 xyz; float __3; };
+       struct { float __0; float yzw; };
+       struct { COMP_4 };
        __m128 v);
+
 #undef VEC
 
 typedef v2 ff;
