@@ -6,9 +6,14 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <stdint.h>
-#include "nmmintrin.h"
+
 #ifdef ALG_DEBUG
-#include <assert.h>
+	#include <assert.h>
+#endif
+#ifndef ALG_NSIMD
+	#include "nmmintrin.h"
+#else
+	typedef struct {} __m128;
 #endif
 
 #define VEC(N, ...) typedef union v ## N { \
@@ -336,7 +341,16 @@ GEN(2, dot, ff)
 
 static ALG_INLINE float v4_dot(v4 a, v4 b)
 {
+#ifndef ALG_NSIMD
 	v4 result = { .v = _mm_mul_ps(a.v, b.v) };
+#else
+	v4 result = {
+		a.x * b.x,
+		a.y * b.y,
+		a.z * b.z,
+		a.w * b.w,
+	};
+#endif
 	return result.x + result.y + result.z + result.w;
 }
 
