@@ -739,6 +739,25 @@ static v4 qt_axis_angle(v3 axis, float angle)
 	};
 }
 
+static ALG_INLINE float qt_angle(v4 q)
+{
+	return 2.f * acosf(q.w);
+}
+
+static ffff qt_to_axis_angle(v4 q)
+{
+	const float s = 1.f - q.w * q.w;
+
+	if (__FLT_MIN__ >= s)
+		return V4_UP;
+
+	const v3 axis = v3_mul(q.xyz, 1.f / sqrtf(s));
+	return (v4) {
+		.xyz = axis,
+		qt_angle(q),
+	};
+}
+
 /* Optimized formulation:
  * gamedev.stackexchange.com/questions/28395/rotating-vector3-by-a-quaternion
  */
