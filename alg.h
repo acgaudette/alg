@@ -361,7 +361,7 @@ static ALG_INLINE float v3_dot(v3 a, v3 b)
 	return xx + yy + zz;
 }
 
-#define dotfff (a, b) v3_dot(a, b)
+#define  dotfff(a, b) v3_dot(a, b)
 #define dotffff(a, b) v4_dot(a, b)
 
 #define LERP(N) static v ## N v ## N ## _lerp(v ## N a, v ## N b, float s) \
