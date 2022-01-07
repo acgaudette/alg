@@ -840,6 +840,14 @@ static m4 m4_model(v3 pos, v4 rot, float scale)
 	return result;
 }
 
+static m4 m4_model_aniso(v3 pos, v4 rot, v3 scale)
+{
+	const m4 s = m4_scale_aniso(scale.x, scale.y, scale.z);
+	const m4 r = qt_to_m4(rot);
+	const m4 t = m4_trans(pos);
+	return m4_mul(t, m4_mul(r, s));
+}
+
 static m4 m4_view(v3 pos, v4 rot)
 {
 	return m4_mul(qt_to_m4(qt_conj(rot)), m4_trans(v3_neg(pos)));
