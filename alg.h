@@ -910,6 +910,11 @@ static m4 m4_view(v3 pos, v4 rot)
 	return m4_mul(qt_to_m4(qt_conj(rot)), m4_trans(v3_neg(pos)));
 }
 
+static m4 m4_view_inv(v3 pos, v4 rot)
+{
+	return m4_mul(m4_trans(pos), qt_to_m4(rot));
+}
+
 /* Debug */
 
 #include <stdio.h>
