@@ -351,6 +351,18 @@ GEN(3, sign, fff)
 GEN(4, sign, ffff)
 #undef sign
 
+#define abs(N, ID) static v ## N ID(v ## N v) \
+{ \
+	for (size_t i = 0; i < N; ++i) \
+		v.s[i] = fabsf(v.s[i]); \
+	return v; \
+}
+
+GEN(2, abs, ff)
+GEN(3, abs, fff)
+GEN(4, abs, ffff)
+#undef abs
+
 #define dot(N, ID) static float ID(v ## N a, v ## N b) \
 {                                                      \
         float s = 0.f;                                 \
