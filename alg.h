@@ -646,6 +646,27 @@ static m4 m4_persp(float fov, float asp, float near, float far)
 	return m;
 }
 
+static m4 m4_persp_inv(float fov, float asp, float near, float far)
+{
+	float range = far - near;
+	float z_scale = 1.f / range;
+	float z_off = -near / range;
+
+	float y_scale = 1.f / tanf(.5f * fov * M_PI / 180.f);
+	float x_scale = y_scale / asp;
+	y_scale *= -1.f;
+
+	m4 m = {
+		.c0.x = 1.f / x_scale,
+		.c1.y = 1.f / y_scale,
+		.c2.w = 1.f / z_off,
+		.c3.z = 1.f,
+		.c3.w = -z_scale / z_off,
+	};
+
+	return m;
+}
+
 // Scale -> number of units that can fit in vertical height
 static m4 m4_ortho(float scale, float asp, float near, float far)
 {
