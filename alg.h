@@ -255,6 +255,18 @@ GEN(3, muleq, fff)
 GEN(4, muleq, ffff)
 #undef muleq
 
+#define inv(N, ID) static v ## N ID(v ## N v) \
+{ \
+	for (size_t i = 0; i < N; ++i) \
+		v.s[i] = 1.f / v.s[i]; \
+	return v; \
+}
+
+GEN(2, inv, ff)
+GEN(3, inv, fff)
+GEN(4, inv, ffff)
+#undef inv
+
 #define schur(N, ID) static v ## N ID(v ## N a, v ## N b) \
 { \
 	for (size_t i = 0; i < N; ++i) \
