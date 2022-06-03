@@ -339,6 +339,18 @@ GEN(3, isnorm, fff)
 GEN(4, isnorm, ffff)
 #undef isnorm
 
+#define sign(N, ID) static v ## N ID(v ## N v) \
+{ \
+	for (size_t i = 0; i < N; ++i) \
+		v.s[i] = signf(v.s[i]); \
+	return v; \
+}
+
+GEN(2, sign, ff)
+GEN(3, sign, fff)
+GEN(4, sign, ffff)
+#undef sign
+
 #define dot(N, ID) static float ID(v ## N a, v ## N b) \
 {                                                      \
         float s = 0.f;                                 \
