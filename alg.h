@@ -328,6 +328,26 @@ GEN(3, norm, fff)
 GEN(4, norm, ffff)
 #undef norm
 
+#define NORM_SAFE(N) static v ## N v ## N ## _norm_safe(v ## N v) \
+{ \
+	float mag = v ## N ## _mag(v); \
+	if (mag < __FLT_MIN__) \
+		return v; \
+	float inv = 1.f / mag; \
+	for (size_t i = 0; i < N; ++i) \
+		v.s[i] *= inv; \
+	return v; \
+}
+
+NORM_SAFE(2)
+NORM_SAFE(3)
+NORM_SAFE(4)
+#undef NORM_SAFE
+
+ALG_INLINE static ff   normff_safe   (ff   v) { return v2_norm_safe(v) ; }
+ALG_INLINE static fff  normfff_safe  (fff  v) { return v3_norm_safe(v) ; }
+ALG_INLINE static ffff normffff_safe (ffff v) { return v4_norm_safe(v) ; }
+
 #define isnorm(N, ID) static int ID(v ## N v) \
 { \
 	float magsq = v ## N ## _magsq(v); \
