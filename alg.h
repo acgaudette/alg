@@ -279,6 +279,18 @@ GEN(3, schur, fff)
 GEN(4, schur, ffff)
 #undef schur
 
+#define mulinv(N, ID) static v ## N ID(float s, v ## N v) \
+{ \
+	for (size_t i = 0; i < N; ++i) \
+		v.s[i] = s / v.s[i]; \
+	return v; \
+}
+
+GEN(2, mulinv, ff)
+GEN(3, mulinv, fff)
+GEN(4, mulinv, ffff)
+#undef mulinv
+
 #define magsq(N, ID) static float ID(v ## N v) \
 { \
 	float s = 0.f; \
