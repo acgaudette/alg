@@ -660,47 +660,112 @@ static ALG_INLINE m4 m4_scale_aniso(float x, float y, float z)
 	return M4_DIAG(x, y, z, 1.f);
 }
 
-// Expects VFOV (width / height) in degrees
-static m4 m4_persp(float fov, float asp, float near, float far)
-{
-	float range = far - near;
-	float z_scale = 1.f / range;
-	float z_off = -near / range;
+// 'Standard' Z; Y from top; left handed
+static m4 m4_persp_01(
+	const float vfov, // Degrees
+	const float asp,
+	const float near,
+	const float far
+) {
+	const float f = 1.f / tanf(.5f * vfov * M_PI / 180.f);
+	const float y_scale = -f;
+	const float x_scale =  f / asp;
 
-	float y_scale = 1.f / tanf(.5f * fov * M_PI / 180.f);
-	float x_scale = y_scale / asp;
-	y_scale *= -1.f;
+	const float z_scale = far / (far - near);
+	const float z_off = near * far / (near - far);
 
-	m4 m = {
+	return (m4) {
 		.c0.x = x_scale,
 		.c1.y = y_scale,
 		.c2.z = z_scale,
 		.c2.w = 1.f,
 		.c3.z = z_off,
 	};
-
-	return m;
 }
 
-static m4 m4_persp_inv(float fov, float asp, float near, float far)
+// 'Reverse' Z; Y from top; left handed
+static m4 m4_persp_10(
+	const float vfov, // Degrees
+	const float asp,
+	const float near,
+	const float far
+) {
+	const float f = 1.f / tanf(.5f * vfov * M_PI / 180.f);
+	const float y_scale = -f;
+	const float x_scale =  f / asp;
+
+	const float range = near - far;
+	const float z_scale = near / range;
+	const float z_off = -far * z_scale; // -far * near / range
+
+	return (m4) {
+		.c0.x = x_scale,
+		.c1.y = y_scale,
+		.c2.z = z_scale,
+		.c2.w = 1.f,
+		.c3.z = z_off,
+	};
+}
+
+// 'Reverse' Z, no far plane; Y from top; left handed
+static m4 m4_persp_10_inf(const float vfov, const float asp, const float near)
 {
-	float range = far - near;
-	float z_scale = 1.f / range;
-	float z_off = -near / range;
+	const float f = 1.f / tanf(.5f * vfov * M_PI / 180.f);
+	const float y_scale = -f;
+	const float x_scale =  f / asp;
+	const float z_off = near;
 
-	float y_scale = 1.f / tanf(.5f * fov * M_PI / 180.f);
-	float x_scale = y_scale / asp;
-	y_scale *= -1.f;
+	return (m4) {
+		.c0.x = x_scale,
+		.c1.y = y_scale,
+		.c2.w = 1.f,
+		.c3.z = z_off,
+	};
+}
 
-	m4 m = {
+// 'Standard' Z, -1 to +1 range; Y from bottom; left handed
+static m4 m4_persp_gl(
+	const float vfov, // Degrees
+	const float asp,
+	const float near,
+	const float far
+) {
+	const float y_scale = 1.f / tanf(.5f * vfov * M_PI / 180.f);
+	const float x_scale = y_scale / asp;
+
+	const float range = far - near;
+	const float z_scale = (far + near) / range;
+	const float z_off = -2.f * far * near / range;
+
+	return (m4) {
+		.c0.x = x_scale,
+		.c1.y = y_scale,
+		.c2.z = z_scale,
+		.c2.w = 1.f,
+		.c3.z = z_off,
+	};
+}
+
+static m4 m4_persp_gl_inv(
+	const float vfov, // Degrees
+	const float asp,
+	const float near,
+	const float far
+) {
+	const float y_scale = 1.f / tanf(.5f * vfov * M_PI / 180.f);
+	const float x_scale = y_scale / asp;
+
+	const float range = far - near;
+	const float z_scale = (far + near) / range;
+	const float z_off = -2.f * far * near / range;
+
+	return (m4) {
 		.c0.x = 1.f / x_scale,
 		.c1.y = 1.f / y_scale,
 		.c2.w = 1.f / z_off,
 		.c3.z = 1.f,
 		.c3.w = -z_scale / z_off,
 	};
-
-	return m;
 }
 
 // Scale -> number of units that can fit in vertical height
