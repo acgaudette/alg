@@ -148,9 +148,9 @@ GEN(3, shift, fff)
 GEN(4, shift, ffff)
 #undef shift
 
-#define V2_ZERO ((v2) {})
-#define V3_ZERO ((v3) {})
-#define V4_ZERO ((v4) {})
+#define V2_ZERO ((v2) { 0 })
+#define V3_ZERO ((v3) { 0 })
+#define V4_ZERO ((v4) { 0 })
 
 #define V2_ONE V2_FILL(1.f)
 #define V3_ONE V3_FILL(1.f)
@@ -483,9 +483,9 @@ static v3 v3_cross(v3 a, v3 b)
 
 /* Matrices */
 
-#define M2_ZERO ((m2) {})
-#define M3_ZERO ((m3) {})
-#define M4_ZERO ((m4) {})
+#define M2_ZERO ((m2) { 0 })
+#define M3_ZERO ((m3) { 0 })
+#define M4_ZERO ((m4) { 0 })
 
 #define M2_ID ((m2) { .s[0] = 1.f, .s[3] = 1.f })
 #define M3_ID ((m3) { .s[0] = 1.f, .s[4] = 1.f, .s [8] = 1.f })
