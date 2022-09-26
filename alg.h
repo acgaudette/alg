@@ -555,9 +555,9 @@ static m3 m3_mul(m3 a, m3 b)
 	return m; \
 }
 
-DIAG(2);
-DIAG(3);
-DIAG(4);
+DIAG(2)
+DIAG(3)
+DIAG(4)
 #undef DIAG
 
 #define FILL(A, B) static m ## A m ## A ## _fill_m ## B (m ## B n) \
