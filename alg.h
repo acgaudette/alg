@@ -7,6 +7,10 @@
 #include <math.h>
 #include <stdint.h>
 
+#ifndef M_PI
+#define M_PI 3.14159265f
+#endif
+
 #ifdef ALG_DEBUG
 	#include <assert.h>
 #endif
